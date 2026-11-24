@@ -1,0 +1,17 @@
+# Build artifacts
+build/
+*.o
+*.out
+a.out
+
+# Generated output & test data
+output/
+*.bin
+sample*.txt
+
+# OS & editor files
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*~
