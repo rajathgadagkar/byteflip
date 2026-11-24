@@ -84,8 +84,15 @@ echo "$REPORT" | grep -q "Whether file contents are correctly processed: Yes" \
 pass "Multi-MiB streaming: Mode 2 (2.5 MB partial range)"
 
 # 6. Strict POSIX permissions check (dir: 0700, output file: 0600)
-DIR_PERM="$(stat -f '%Lp' output 2>/dev/null || stat -c '%a' output)"
-FILE_PERM="$(stat -f '%Lp' output/1_full.txt 2>/dev/null || stat -c '%a' output/1_full.txt)"
+get_octal_perm() {
+    if [[ "$(uname -s)" == "Darwin" ]]; then
+        stat -f '%Lp' "$1"
+    else
+        stat -c '%a' "$1"
+    fi
+}
+DIR_PERM="$(get_octal_perm output)"
+FILE_PERM="$(get_octal_perm output/1_full.txt)"
 assert_eq "$DIR_PERM" "700" "POSIX permissions: output directory is 0700"
 assert_eq "$FILE_PERM" "600" "POSIX permissions: output file is 0600"
 
